@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="VelScript">
+  <defs>
+    <linearGradient id="velscript-mark" x1="74" y1="0" x2="182" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="49.9%" stop-color="#d9655d"/>
+      <stop offset="50.1%" stop-color="#ede7dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="#17191d"/>
+  <path d="M74 43 128 169 182 43" fill="none" stroke="url(#velscript-mark)" stroke-width="30" stroke-linecap="round" stroke-linejoin="round"/>
+  <path d="M153 215h40" fill="none" stroke="#d9655d" stroke-width="14" stroke-linecap="round"/>
+</svg>

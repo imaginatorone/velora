@@ -1,0 +1,38 @@
+name: Feature request
+description: Propose a focused engine or VelScript improvement.
+title: ""
+labels: []
+body:
+  - type: textarea
+    id: problem
+    attributes:
+      label: Problem
+      description: Describe the limitation or workflow that needs improvement.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed change
+      description: Explain the behavior and show VelScript syntax when relevant.
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+      description: Note existing workarounds or smaller approaches.
+  - type: textarea
+    id: compatibility
+    attributes:
+      label: Compatibility impact
+      description: Mention saves, scripts, APIs, or platform behavior that could change.
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues and documentation.
+          required: true
+        - label: I am willing to help implement or test this change.
+          required: false

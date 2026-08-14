@@ -1,0 +1,75 @@
+-- A small, asset-free scenario used by the executable and regression tests.
+
+config ui_accent_color = "#8fb3a2"
+config text_speed = 34
+config game_locale = "en"
+
+meta set_title "Velora Example"
+
+character guide = "Guide" color: #8FB3A2
+character operator = "Operator" color: #D4B483
+
+set player.name = ""
+set route = ""
+set visits = 0
+set ready = false
+
+label start:
+    particle dust intensity(0.16) wind(0.03)
+    guide "This is the bundled VelScript example."
+    guide "It is deliberately small and does not require external artwork or audio."
+    input "What should I call you?" -> player.name
+
+    if player.name == "":
+        set player.name = "Reader"
+    end
+
+    guide "Welcome, {bold}[player.name]{/bold}."
+    guide "Choose a branch to exercise the parser and runtime."
+
+    menu:
+        "Inspect the observatory":
+            set route = "observatory"
+            set visits = visits + 1
+            jump observatory
+        "Call the operator":
+            set route = "operator"
+            jump operator_call
+        "Finish the example":
+            jump finish
+    end
+
+label observatory:
+    "The room is quiet except for the slow turn of an old brass mechanism."
+    guide "Variables, menus, labels, transitions, and inline text tags are active."
+    guide "Your visit counter is now [visits]."
+    set ready = true
+    jump summary
+
+label operator_call:
+    operator "Control desk. Runtime status is nominal."
+    operator "Missing optional assets are replaced or skipped without stopping the script."
+    set ready = true
+    jump summary
+
+label summary:
+    if route == "observatory" and ready == true:
+        guide "The observatory branch completed successfully."
+    elif route == "operator" and ready == true:
+        operator "The operator branch completed successfully."
+    else:
+        "The example reached an unexpected state."
+    end
+
+    menu:
+        "Return to the branch menu":
+            jump start
+        "End the example":
+            jump finish
+    end
+
+label finish:
+    particle stop "dust"
+    guide "End of example. Replace this file with your own project entry point."
+    wait 0.4
+    meta main_menu

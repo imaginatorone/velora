@@ -1,0 +1,34 @@
+# CMake and IDE output
+/build/
+/build_*/
+/out/
+/cmake-build-*/
+/.cache/
+/.idea/
+/.vscode/
+compile_commands.json
+CMakeUserPresets.json
+
+# Generated user data
+/saves/*.vsav
+/settings.json
+*.vper
+
+# Platform files
+.DS_Store
+Thumbs.db
+*.user
+*.suo
+*.VC.db
+
+# Compiler output
+*.o
+*.obj
+*.a
+*.lib
+*.dll
+*.dylib
+*.so
+*.exe
+*.pdb
+*.app/

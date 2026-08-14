@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" role="img" aria-label="Velora Engine">
+  <defs>
+    <linearGradient id="velora-mark" x1="64" y1="0" x2="192" y2="0" gradientUnits="userSpaceOnUse">
+      <stop offset="49.9%" stop-color="#d9655d"/>
+      <stop offset="50.1%" stop-color="#ede7dc"/>
+    </linearGradient>
+  </defs>
+  <rect width="256" height="256" rx="52" fill="#17191d"/>
+  <path d="M64 52 128 202 192 52" fill="none" stroke="url(#velora-mark)" stroke-width="34" stroke-linecap="round" stroke-linejoin="round"/>
+</svg>

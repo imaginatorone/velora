@@ -1,0 +1,63 @@
+name: Bug report
+description: Report a reproducible problem in Velora Engine or VelScript.
+title: ""
+labels: []
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for taking the time to report a problem. Please reduce it to the smallest useful example.
+  - type: input
+    id: version
+    attributes:
+      label: Velora version
+      description: Use a release number or commit hash.
+      placeholder: 0.2.0 or 1a2b3c4
+    validations:
+      required: true
+  - type: dropdown
+    id: platform
+    attributes:
+      label: Operating system
+      options:
+        - Windows
+        - Linux
+        - macOS
+        - Other
+    validations:
+      required: true
+  - type: input
+    id: toolchain
+    attributes:
+      label: Compiler and build type
+      placeholder: Clang 18, Release
+    validations:
+      required: true
+  - type: textarea
+    id: problem
+    attributes:
+      label: What happened?
+      description: Include the actual result and what you expected instead.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduce
+    attributes:
+      label: Reproduction steps
+      description: Include a minimal .vel script when the parser or runtime is involved.
+      render: text
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Relevant log output
+      render: shell
+  - type: checkboxes
+    id: checks
+    attributes:
+      label: Checks
+      options:
+        - label: I searched existing issues for the same problem.
+          required: true
+        - label: I removed private data and credentials from the report.
+          required: true
