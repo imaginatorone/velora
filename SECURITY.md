@@ -8,9 +8,10 @@ Security fixes target the `main` branch and the latest tagged release. Older
 ## Reporting a vulnerability
 
 Use [GitHub private vulnerability reporting](https://github.com/imaginatorone/velora/security/advisories/new)
-when it is available. If that page is unavailable, contact the project owner
+when it is available. If that page is unavailable, contact a lead maintainer
 through the private contact method listed on the
-[`@imaginatorone`](https://github.com/imaginatorone) profile.
+[`@imaginatorone`](https://github.com/imaginatorone) or
+[`@Lucferdev`](https://github.com/Lucferdev) profile.
 
 Include the affected version or commit, operating system, impact, reproduction
 steps, and any proposed mitigation. Do not include secrets or personal data in

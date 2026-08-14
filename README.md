@@ -134,6 +134,11 @@ Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and
 open an issue before making a large behavioral or language change. Before
 submitting a pull request, build the project and run the tests described there.
 
+## Project team
+
+- [@imaginatorone](https://github.com/imaginatorone) - co-author and maintainer
+- [@Lucferdev](https://github.com/Lucferdev) - co-author and maintainer
+
 ## License
 
 Velora Engine is released under the [MIT License](LICENSE). You may use,

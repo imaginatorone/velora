@@ -20,9 +20,10 @@ being dismissed, harassed, or pressured.
 
 ## Reporting and enforcement
 
-Do not open a public issue about a private conduct matter. Contact the project
-owner through the private contact method listed on the
-[`@imaginatorone`](https://github.com/imaginatorone) GitHub profile.
+Do not open a public issue about a private conduct matter. Contact a lead
+maintainer through the private contact method listed on the
+[`@imaginatorone`](https://github.com/imaginatorone) or
+[`@Lucferdev`](https://github.com/Lucferdev) GitHub profile.
 
 Maintainers may edit or remove comments, close discussions, reject
 contributions, or temporarily or permanently restrict participation. Reports
