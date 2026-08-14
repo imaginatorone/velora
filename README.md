@@ -9,7 +9,6 @@
 </p>
 
 <p align="center">
-  <a href="https://github.com/imaginatorone/velora/actions/workflows/ci.yml"><img src="https://github.com/imaginatorone/velora/actions/workflows/ci.yml/badge.svg" alt="CI status"></a>
   <img src="https://img.shields.io/badge/C%2B%2B-20-59636F" alt="C++20">
   <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-D9655D" alt="Windows, Linux, and macOS">
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-B8A98F" alt="MIT License"></a>
@@ -119,7 +118,7 @@ syntax reference, examples, and common mistakes.
 ## Repository layout
 
 ```text
-.github/         CI and contribution templates
+.github/         Contribution templates and dependency updates
 assets/          Runtime icons, locale files, and example scripts
 cmake/           CMake compatibility modules
 docs/            VelScript documentation
@@ -132,8 +131,8 @@ Generated files belong under `out/` and are ignored by Git.
 ## Contributing
 
 Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and
-open an issue before making a large behavioral or language change. CI builds
-and tests every pull request on Windows, Linux, and macOS.
+open an issue before making a large behavioral or language change. Before
+submitting a pull request, build the project and run the tests described there.
 
 ## License
 
