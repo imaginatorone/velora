@@ -136,7 +136,7 @@ submitting a pull request, build the project and run the tests described there.
 
 ## Project team
 
-- [@imaginatorone](https://github.com/imaginatorone) - co-author and maintainer
+- [@imaginatorone](https://github.com/imaginatorone) - owner and lead maintainer
 - [@Lucferdev](https://github.com/Lucferdev) - co-author and maintainer
 
 ## License
