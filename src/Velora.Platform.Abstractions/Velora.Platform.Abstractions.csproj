@@ -1,0 +1,7 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Velora.Platform.Abstractions</AssemblyName>
+    <RootNamespace>Velora.Platform</RootNamespace>
+  </PropertyGroup>
+</Project>

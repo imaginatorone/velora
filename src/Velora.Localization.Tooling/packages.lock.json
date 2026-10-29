@@ -1,0 +1,13 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "velora.localization": {
+        "type": "Project"
+      },
+      "velora.script.syntax": {
+        "type": "Project"
+      }
+    }
+  }
+}

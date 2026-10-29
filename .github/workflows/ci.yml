@@ -1,0 +1,99 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  DOTNET_CLI_TELEMETRY_OPTOUT: "1"
+  DOTNET_NOLOGO: "1"
+  TESTINGPLATFORM_TELEMETRY_OPTOUT: "1"
+
+jobs:
+  dotnet:
+    name: .NET 10 (${{ matrix.os }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-24.04, windows-2025, macos-15]
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Set up pinned .NET SDK
+        uses: actions/setup-dotnet@v6
+        with:
+          global-json-file: global.json
+          cache: true
+          cache-dependency-path: "**/packages.lock.json"
+
+      - name: Restore locked dependencies
+        run: dotnet restore Velora.sln --locked-mode
+
+      - name: Build
+        run: dotnet build Velora.sln --configuration Release --no-restore
+
+      - name: Configure native audio
+        run: cmake -S native/audio -B artifacts/native-audio -DCMAKE_BUILD_TYPE=Release
+
+      - name: Build native audio
+        run: cmake --build artifacts/native-audio --config Release --parallel 2
+
+      - name: Test native audio without a device
+        run: ctest --test-dir artifacts/native-audio -C Release --output-on-failure
+
+      - name: Locate native audio for managed interop tests
+        shell: pwsh
+        run: |
+          $names = @('velora_audio_native.dll', 'libvelora_audio_native.dylib', 'libvelora_audio_native.so')
+          $library = @(Get-ChildItem artifacts/native-audio -Recurse -File | Where-Object { $_.Name -in $names })
+          if ($library.Count -ne 1) { throw "Expected one native audio library, found $($library.Count)" }
+          "VELORA_AUDIO_NATIVE_PATH=$($library[0].FullName)" | Out-File -FilePath $env:GITHUB_ENV -Append
+
+      - name: Test
+        run: >-
+          dotnet test --solution Velora.sln
+          --configuration Release
+          --no-build
+          --no-restore
+          --no-progress
+          --no-ansi
+          --minimum-expected-tests 1
+
+      - name: Validate and simulate the complete sample
+        run: |
+          dotnet run --project src/Velora.Cli -c Release --no-build -- validate samples/KitchenSink/game.velproj
+          dotnet run --project src/Velora.Cli -c Release --no-build -- simulate samples/KitchenSink/game.velproj --input Reader
+
+      - name: Publish portable CLI and smoke test
+        run: |
+          dotnet publish src/Velora.Cli -c Release --no-restore --self-contained false -o artifacts/cli
+          dotnet artifacts/cli/Velora.Cli.dll --version
+
+  legacy-oracle:
+    name: Legacy C++ oracle
+    runs-on: ubuntu-24.04
+
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v7
+
+      - name: Configure
+        run: cmake --preset release
+
+      - name: Build
+        run: cmake --build --preset release --parallel
+
+      - name: Test
+        run: ctest --preset release -C Release --output-on-failure

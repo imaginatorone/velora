@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1280" height="720" viewBox="0 0 1280 720">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#080b18"/>
+      <stop offset="1" stop-color="#24382f"/>
+    </linearGradient>
+    <pattern id="grid" width="80" height="80" patternUnits="userSpaceOnUse">
+      <path d="M80 0H0V80" fill="none" stroke="#8fb3a2" stroke-opacity="0.18"/>
+    </pattern>
+  </defs>
+  <rect width="1280" height="720" fill="url(#sky)"/>
+  <rect width="1280" height="720" fill="url(#grid)"/>
+  <circle cx="1020" cy="180" r="96" fill="#d4b483" fill-opacity="0.20"/>
+  <text x="64" y="92" fill="#edf4e9" font-family="sans-serif" font-size="32">Velora Kitchen Sink</text>
+</svg>

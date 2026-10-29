@@ -78,6 +78,36 @@ FetchContent_MakeAvailable(miniaudio)
 add_library(velora_miniaudio INTERFACE)
 target_include_directories(velora_miniaudio SYSTEM INTERFACE "${miniaudio_SOURCE_DIR}")
 
+add_library(VeloraAudioNative SHARED
+    native/audio/velora_audio_native.c
+    native/audio/velora_audio_native.h
+)
+target_include_directories(VeloraAudioNative
+    PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/native/audio"
+)
+find_package(Threads REQUIRED)
+target_link_libraries(VeloraAudioNative PRIVATE velora_miniaudio Threads::Threads ${CMAKE_DL_LIBS})
+if(UNIX AND NOT APPLE)
+    target_link_libraries(VeloraAudioNative PRIVATE m)
+endif()
+set_target_properties(VeloraAudioNative PROPERTIES
+    C_VISIBILITY_PRESET hidden
+    OUTPUT_NAME velora_audio_native
+    POSITION_INDEPENDENT_CODE ON
+    VISIBILITY_INLINES_HIDDEN YES
+)
+if(MSVC)
+    target_compile_options(VeloraAudioNative PRIVATE /W4 /utf-8)
+    if(VELORA_WARNINGS_AS_ERRORS)
+        target_compile_options(VeloraAudioNative PRIVATE /WX)
+    endif()
+else()
+    target_compile_options(VeloraAudioNative PRIVATE -Wall -Wextra -Wpedantic)
+    if(VELORA_WARNINGS_AS_ERRORS)
+        target_compile_options(VeloraAudioNative PRIVATE -Werror)
+    endif()
+endif()
+
 velora_fetch(json https://github.com/nlohmann/json.git
     9cca280a4d0ccf0c08f47a99aa71d1b0e52f8d03)
 set(JSON_BuildTests OFF CACHE BOOL "" FORCE)
@@ -171,6 +201,10 @@ install(TARGETS VeloraEngine
     BUNDLE DESTINATION .
     RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
 )
+install(TARGETS VeloraAudioNative
+    LIBRARY DESTINATION "${CMAKE_INSTALL_LIBDIR}"
+    RUNTIME DESTINATION "${CMAKE_INSTALL_BINDIR}"
+)
 install(FILES LICENSE THIRD_PARTY_NOTICES.md DESTINATION .)
 install(FILES "${sdl3_SOURCE_DIR}/LICENSE.txt" DESTINATION licenses RENAME SDL3.txt)
 install(FILES "${sdl3_image_SOURCE_DIR}/LICENSE.txt" DESTINATION licenses RENAME SDL3_image.txt)
@@ -183,6 +217,21 @@ endif()
 
 if(VELORA_BUILD_TESTS)
     enable_testing()
+    add_executable(VeloraAudioNativeTests tests/VeloraAudioNativeTests.c)
+    target_link_libraries(VeloraAudioNativeTests PRIVATE VeloraAudioNative)
+    if(MSVC)
+        target_compile_options(VeloraAudioNativeTests PRIVATE /W4 /utf-8)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraAudioNativeTests PRIVATE /WX)
+        endif()
+    else()
+        target_compile_options(VeloraAudioNativeTests PRIVATE -Wall -Wextra -Wpedantic)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraAudioNativeTests PRIVATE -Werror)
+        endif()
+    endif()
+    add_test(NAME VeloraAudioNativeTests COMMAND VeloraAudioNativeTests)
+
     add_executable(VeloraCoreTests
         tests/CoreTests.cpp
         src/core/GameStateManager.cpp
@@ -203,6 +252,70 @@ if(VELORA_BUILD_TESTS)
             target_compile_options(VeloraCoreTests PRIVATE -Werror)
         endif()
     endif()
+
+    add_executable(VeloraLegacyFixtureGenerator
+        tests/LegacyFixtureGenerator.cpp
+        src/core/GameStateManager.cpp
+    )
+    target_include_directories(VeloraLegacyFixtureGenerator PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    )
+    target_link_libraries(VeloraLegacyFixtureGenerator PRIVATE nlohmann_json::nlohmann_json)
+    if(MSVC)
+        target_compile_options(VeloraLegacyFixtureGenerator PRIVATE /W4 /permissive- /utf-8)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraLegacyFixtureGenerator PRIVATE /WX)
+        endif()
+    else()
+        target_compile_options(VeloraLegacyFixtureGenerator PRIVATE -Wall -Wextra -Wpedantic)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraLegacyFixtureGenerator PRIVATE -Werror)
+        endif()
+    endif()
+
+    set(VELORA_RUNTIME_ORACLE_SOURCES ${VELORA_SOURCES})
+    list(REMOVE_ITEM VELORA_RUNTIME_ORACLE_SOURCES src/main.cpp)
+    if(WIN32)
+        list(REMOVE_ITEM VELORA_RUNTIME_ORACLE_SOURCES src/velora.rc)
+    endif()
+    add_executable(VeloraLegacyRuntimeOracle
+        tests/LegacyRuntimeOracle.cpp
+        ${VELORA_RUNTIME_ORACLE_SOURCES}
+    )
+    target_include_directories(VeloraLegacyRuntimeOracle PRIVATE
+        "${CMAKE_CURRENT_SOURCE_DIR}/src"
+    )
+    target_compile_definitions(VeloraLegacyRuntimeOracle PRIVATE
+        VELORA_VERSION="${PROJECT_VERSION}"
+    )
+    target_link_libraries(VeloraLegacyRuntimeOracle PRIVATE
+        SDL3::SDL3-static
+        SDL3_image::SDL3_image-static
+        SDL3_ttf::SDL3_ttf-static
+        velora_miniaudio
+        nlohmann_json::nlohmann_json
+        ${CMAKE_DL_LIBS}
+    )
+    if(MSVC)
+        target_compile_options(VeloraLegacyRuntimeOracle PRIVATE /W4 /permissive- /utf-8)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraLegacyRuntimeOracle PRIVATE /WX)
+        endif()
+    else()
+        target_compile_options(VeloraLegacyRuntimeOracle PRIVATE -Wall -Wextra -Wpedantic)
+        if(VELORA_WARNINGS_AS_ERRORS)
+            target_compile_options(VeloraLegacyRuntimeOracle PRIVATE -Werror)
+        endif()
+    endif()
+
     add_test(NAME VeloraCoreTests COMMAND VeloraCoreTests)
+    add_test(NAME VeloraLegacyPersistenceFixtures
+        COMMAND VeloraLegacyFixtureGenerator --verify
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/persistence"
+    )
+    add_test(NAME VeloraLegacyRuntimeOracle
+        COMMAND VeloraLegacyRuntimeOracle --verify
+            "${CMAKE_CURRENT_SOURCE_DIR}/tests/fixtures/runtime/legacy-runtime-contract.json"
+    )
     add_test(NAME VeloraVersion COMMAND VeloraEngine --version)
 endif()

@@ -1,0 +1,177 @@
+{
+  "choice_continuation": {
+    "after_first_choice": {
+      "current_label": "start",
+      "state": "running",
+      "statement_cursor": 2,
+      "variables": {
+        "choice_after_dialogue": 1.0,
+        "outer_after_menu": null
+      }
+    },
+    "after_invalid_choice": {
+      "current_label": "start",
+      "state": "waiting_choice",
+      "statement_cursor": 2,
+      "variables": {
+        "choice_after_dialogue": null,
+        "outer_after_menu": null
+      }
+    },
+    "after_next_update": {
+      "current_label": "start",
+      "state": "finished",
+      "statement_cursor": 3,
+      "variables": {
+        "choice_after_dialogue": 1.0,
+        "outer_after_menu": 1.0
+      }
+    },
+    "after_update": {
+      "current_label": "start",
+      "state": "waiting_choice",
+      "statement_cursor": 2,
+      "variables": {
+        "choice_after_dialogue": null,
+        "outer_after_menu": null
+      }
+    }
+  },
+  "flow_leniency": {
+    "current_label": "start",
+    "state": "finished",
+    "statement_cursor": 6,
+    "variables": {
+      "continued_after_missing_jump": true,
+      "reached": 2.0
+    }
+  },
+  "input_choice": {
+    "after_next_update": {
+      "current_label": "start",
+      "state": "finished",
+      "statement_cursor": 3,
+      "variables": {
+        "after_input": 1.0,
+        "route": "Beta",
+        "sys.name_gibberish": false
+      }
+    },
+    "after_selection": {
+      "current_label": "start",
+      "state": "running",
+      "statement_cursor": 2,
+      "variables": {
+        "after_input": null,
+        "route": "Beta",
+        "sys.name_gibberish": false
+      }
+    },
+    "after_update": {
+      "current_label": "start",
+      "state": "waiting_choice",
+      "statement_cursor": 2,
+      "variables": {
+        "after_input": null,
+        "route": null,
+        "sys.name_gibberish": null
+      }
+    },
+    "prompt": "Route"
+  },
+  "mixed_coercion": {
+    "current_label": "start",
+    "state": "finished",
+    "statement_cursor": 11,
+    "variables": {
+      "boolean_add": 3.0,
+      "boolean_text_equal": true,
+      "divide_zero": 0.0,
+      "lowercase_false_branch": 2.0,
+      "missing_equal_empty": true,
+      "normalized_number_text_equal": true,
+      "number_text_equal": false,
+      "numeric_text_add": 3.5,
+      "unary_bad": 0.0,
+      "uppercase_false_branch": 1.0
+    }
+  },
+  "nested_if_pause": {
+    "after_advance": {
+      "current_label": "start",
+      "state": "finished",
+      "statement_cursor": 3,
+      "variables": {
+        "branch_after_dialogue": 1.0,
+        "outer_after_if": 1.0
+      }
+    },
+    "after_update": {
+      "current_label": "start",
+      "state": "waiting_input",
+      "statement_cursor": 2,
+      "variables": {
+        "branch_after_dialogue": 1.0,
+        "outer_after_if": null
+      }
+    }
+  },
+  "nested_wait": {
+    "after_1_25_seconds": {
+      "current_label": "start",
+      "state": "waiting_timed",
+      "statement_cursor": 2,
+      "variables": {
+        "branch_after_wait": 1.0,
+        "outer_after_if": null
+      }
+    },
+    "after_2_seconds": {
+      "current_label": "start",
+      "state": "finished",
+      "statement_cursor": 3,
+      "variables": {
+        "branch_after_wait": 1.0,
+        "outer_after_if": 1.0
+      }
+    },
+    "after_update": {
+      "current_label": "start",
+      "state": "waiting_timed",
+      "statement_cursor": 2,
+      "variables": {
+        "branch_after_wait": 1.0,
+        "outer_after_if": null
+      }
+    }
+  },
+  "oracle": "Velora C++ production ScriptVM",
+  "pre_start": {
+    "after_first_update": {
+      "current_label": "start",
+      "state": "finished",
+      "statement_cursor": 7,
+      "variables": {
+        "seeded": 2.0,
+        "started": 1.0
+      }
+    },
+    "after_load": {
+      "active_screen_count": 0,
+      "current_label": "start",
+      "has_os_username": true,
+      "registered_character": {
+        "color": "#ACCC9D",
+        "display_name": "Mira"
+      },
+      "state": "running",
+      "statement_cursor": 6,
+      "variables": {
+        "__config.skip_effects": true,
+        "seeded": 2.0,
+        "started": null
+      }
+    }
+  },
+  "schema_version": 1
+}

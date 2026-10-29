@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <OutputType>Exe</OutputType>
+    <IsPackable>false</IsPackable>
+    <IsTestProject>true</IsTestProject>
+    <TestingPlatformDotnetTestSupport>true</TestingPlatformDotnetTestSupport>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="xunit.v3.mtp-v2" Version="4.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../../src/Velora.Runtime/Velora.Runtime.csproj" />
+    <ProjectReference Include="../../src/Velora.Script.Compiler/Velora.Script.Compiler.csproj" />
+    <ProjectReference Include="../../src/Velora.Script.Semantics/Velora.Script.Semantics.csproj" />
+    <ProjectReference Include="../../src/Velora.Script.Syntax/Velora.Script.Syntax.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Using Include="Xunit" />
+    <None Include="../fixtures/runtime/legacy-runtime-contract.json" Link="fixtures/legacy-runtime-contract.json" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+</Project>

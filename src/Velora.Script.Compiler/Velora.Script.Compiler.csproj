@@ -1,0 +1,13 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Velora.Script.Compiler</AssemblyName>
+    <RootNamespace>Velora.Script.Compiler</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Velora.Runtime.Contracts/Velora.Runtime.Contracts.csproj" />
+    <ProjectReference Include="../Velora.Script.Semantics/Velora.Script.Semantics.csproj" />
+    <ProjectReference Include="../Velora.Script.Syntax/Velora.Script.Syntax.csproj" />
+  </ItemGroup>
+</Project>

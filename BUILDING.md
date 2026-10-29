@@ -1,5 +1,9 @@
 # Building Velora
 
+For the C# migration's SDK, tests, headless CLI, desktop publish commands and
+native audio interop checks, see [Testing the C# migration](docs/TESTING_CSHARP.md).
+The instructions below build the legacy C++ runtime.
+
 Velora targets 64-bit Windows, Linux, and macOS. CMake fetches pinned source
 revisions for third-party libraries, so a system-wide SDL installation is not
 required. The first configure needs Git and an internet connection.

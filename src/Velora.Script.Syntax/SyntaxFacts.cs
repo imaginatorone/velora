@@ -1,0 +1,111 @@
+namespace Velora.Script.Syntax;
+
+public static class SyntaxFacts
+{
+    public static SyntaxKind GetKeywordKind(string text)
+    {
+        ArgumentNullException.ThrowIfNull(text);
+
+        return text switch
+        {
+            "label" => SyntaxKind.LabelKeyword,
+            "jump" => SyntaxKind.JumpKeyword,
+            "end" => SyntaxKind.EndKeyword,
+            "scene" => SyntaxKind.SceneKeyword,
+            "show" => SyntaxKind.ShowKeyword,
+            "hide" => SyntaxKind.HideKeyword,
+            "with" => SyntaxKind.WithKeyword,
+            "at" => SyntaxKind.AtKeyword,
+            "wait" => SyntaxKind.WaitKeyword,
+            "play" => SyntaxKind.PlayKeyword,
+            "stop" => SyntaxKind.StopKeyword,
+            "bgm" => SyntaxKind.BgmKeyword,
+            "sfx" => SyntaxKind.SfxKeyword,
+            "voice" => SyntaxKind.VoiceKeyword,
+            "menu" => SyntaxKind.MenuKeyword,
+            "character" => SyntaxKind.CharacterKeyword,
+            "set" => SyntaxKind.SetKeyword,
+            "if" => SyntaxKind.IfKeyword,
+            "elif" => SyntaxKind.ElifKeyword,
+            "else" => SyntaxKind.ElseKeyword,
+            "and" => SyntaxKind.AndKeyword,
+            "or" => SyntaxKind.OrKeyword,
+            "not" => SyntaxKind.NotKeyword,
+            "true" => SyntaxKind.TrueKeyword,
+            "false" => SyntaxKind.FalseKeyword,
+            "config" => SyntaxKind.ConfigKeyword,
+            "tween" => SyntaxKind.TweenKeyword,
+            "emotion" => SyntaxKind.EmotionKeyword,
+            "input" => SyntaxKind.InputKeyword,
+            "meta" => SyntaxKind.MetaKeyword,
+            "particle" => SyntaxKind.ParticleKeyword,
+            "screen" => SyntaxKind.ScreenKeyword,
+            "panel" => SyntaxKind.PanelKeyword,
+            "text" => SyntaxKind.TextKeyword,
+            "imagebutton" => SyntaxKind.ImageButtonKeyword,
+            _ => SyntaxKind.IdentifierToken,
+        };
+    }
+
+    public static string? GetText(SyntaxKind kind) => kind switch
+    {
+        SyntaxKind.EndOfFileToken => string.Empty,
+        SyntaxKind.LabelKeyword => "label",
+        SyntaxKind.JumpKeyword => "jump",
+        SyntaxKind.EndKeyword => "end",
+        SyntaxKind.SceneKeyword => "scene",
+        SyntaxKind.ShowKeyword => "show",
+        SyntaxKind.HideKeyword => "hide",
+        SyntaxKind.WithKeyword => "with",
+        SyntaxKind.AtKeyword => "at",
+        SyntaxKind.WaitKeyword => "wait",
+        SyntaxKind.PlayKeyword => "play",
+        SyntaxKind.StopKeyword => "stop",
+        SyntaxKind.BgmKeyword => "bgm",
+        SyntaxKind.SfxKeyword => "sfx",
+        SyntaxKind.VoiceKeyword => "voice",
+        SyntaxKind.MenuKeyword => "menu",
+        SyntaxKind.CharacterKeyword => "character",
+        SyntaxKind.SetKeyword => "set",
+        SyntaxKind.IfKeyword => "if",
+        SyntaxKind.ElifKeyword => "elif",
+        SyntaxKind.ElseKeyword => "else",
+        SyntaxKind.AndKeyword => "and",
+        SyntaxKind.OrKeyword => "or",
+        SyntaxKind.NotKeyword => "not",
+        SyntaxKind.TrueKeyword => "true",
+        SyntaxKind.FalseKeyword => "false",
+        SyntaxKind.ConfigKeyword => "config",
+        SyntaxKind.TweenKeyword => "tween",
+        SyntaxKind.EmotionKeyword => "emotion",
+        SyntaxKind.InputKeyword => "input",
+        SyntaxKind.MetaKeyword => "meta",
+        SyntaxKind.ParticleKeyword => "particle",
+        SyntaxKind.ScreenKeyword => "screen",
+        SyntaxKind.PanelKeyword => "panel",
+        SyntaxKind.TextKeyword => "text",
+        SyntaxKind.ImageButtonKeyword => "imagebutton",
+        SyntaxKind.EqualsToken => "=",
+        SyntaxKind.EqualsEqualsToken => "==",
+        SyntaxKind.BangEqualsToken => "!=",
+        SyntaxKind.LessThanToken => "<",
+        SyntaxKind.GreaterThanToken => ">",
+        SyntaxKind.LessThanOrEqualsToken => "<=",
+        SyntaxKind.GreaterThanOrEqualsToken => ">=",
+        SyntaxKind.PlusToken => "+",
+        SyntaxKind.MinusToken => "-",
+        SyntaxKind.StarToken => "*",
+        SyntaxKind.SlashToken => "/",
+        SyntaxKind.DotToken => ".",
+        SyntaxKind.ArrowToken => "->",
+        SyntaxKind.ColonToken => ":",
+        SyntaxKind.CommaToken => ",",
+        SyntaxKind.OpenParenthesisToken => "(",
+        SyntaxKind.CloseParenthesisToken => ")",
+        _ => null,
+    };
+
+    public static bool IsKeyword(SyntaxKind kind) => kind is >= SyntaxKind.LabelKeyword and <= SyntaxKind.ImageButtonKeyword;
+
+    public static bool IsTrivia(SyntaxKind kind) => kind is >= SyntaxKind.BomTrivia and <= SyntaxKind.SlashSlashCommentTrivia;
+}

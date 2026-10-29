@@ -1,0 +1,48 @@
+{
+  "version": 1,
+  "dependencies": {
+    "net10.0": {
+      "velora.assets": {
+        "type": "Project"
+      },
+      "velora.localization": {
+        "type": "Project"
+      },
+      "velora.platform.abstractions": {
+        "type": "Project"
+      },
+      "velora.projectmodel": {
+        "type": "Project"
+      },
+      "velora.runtime": {
+        "type": "Project",
+        "dependencies": {
+          "Velora.Localization": "[1.0.0, )",
+          "Velora.Platform.Abstractions": "[1.0.0, )",
+          "Velora.Runtime.Contracts": "[1.0.0, )",
+          "Velora.Script.Compiler": "[1.0.0, )"
+        }
+      },
+      "velora.runtime.contracts": {
+        "type": "Project"
+      },
+      "velora.script.compiler": {
+        "type": "Project",
+        "dependencies": {
+          "Velora.Runtime.Contracts": "[1.0.0, )",
+          "Velora.Script.Semantics": "[1.0.0, )",
+          "Velora.Script.Syntax": "[1.0.0, )"
+        }
+      },
+      "velora.script.semantics": {
+        "type": "Project",
+        "dependencies": {
+          "Velora.Script.Syntax": "[1.0.0, )"
+        }
+      },
+      "velora.script.syntax": {
+        "type": "Project"
+      }
+    }
+  }
+}

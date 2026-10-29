@@ -32,3 +32,10 @@ Thumbs.db
 *.exe
 *.pdb
 *.app/
+
+# .NET output and local tool state
+**/bin/
+**/obj/
+**/TestResults/
+.dotnet/
+artifacts/

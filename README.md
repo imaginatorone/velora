@@ -3,150 +3,121 @@
 </p>
 
 <h1 align="center">Velora Engine</h1>
-
+<p align="center">An open-source narrative engine and VelScript toolchain, migrating from C++20 to C# / .NET 10.</p>
 <p align="center">
-  A compact C++20 runtime for building 2D visual novels on Windows, Linux, and macOS.
+  <img src="https://img.shields.io/badge/C%23-.NET%2010-512BD4" alt="C# and .NET 10">
+  <img src="https://img.shields.io/badge/migration-in%20progress-D5A34B" alt="Migration in progress">
+  <img src="https://img.shields.io/badge/platform-macOS%20%7C%20Windows%20%7C%20Linux-59636F" alt="Platforms">
+  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-B8A98F" alt="MIT"></a>
 </p>
 
-<p align="center">
-  <img src="https://img.shields.io/badge/C%2B%2B-20-59636F" alt="C++20">
-  <img src="https://img.shields.io/badge/platform-Windows%20%7C%20Linux%20%7C%20macOS-D9655D" alt="Windows, Linux, and macOS">
-  <a href="LICENSE"><img src="https://img.shields.io/badge/license-MIT-B8A98F" alt="MIT License"></a>
-</p>
+**Project owner and current maintainer: [@imaginatorone](https://github.com/imaginatorone).**
 
-Velora combines SDL 3, SDL_image, SDL_ttf, miniaudio, and a small scenario
-language called VelScript. This repository contains the engine, an asset-free
-example, and regression tests. It does not contain a game or production
-artwork.
+> **Migration preview, not a finished C# visual novel player.** The legacy C++20
+> application remains in this repository as a compatibility reference.
+> The C# compiler, deterministic runtime, CLI, and independent service layers
+> are implemented and tested. The full desktop Player, Editor, and export
+> feature parity are **not yet complete**.
 
-## Project status
+## The new C# architecture
 
-Velora is in active `0.x` development. Story flow, rendering, audio, saves,
-settings, and localization are implemented. Public APIs and VelScript syntax
-may still change before `1.0`.
+Velora is being rebuilt as a modular, embeddable system for visual novels
+and story-rich games. Its headless core does **not** need an SDL window,
+graphics context, editor UI, or audio hardware.
 
-Video playback, encrypted asset archives, and network APIs are not currently
-implemented.
+| Component | Responsibility |
+| --- | --- |
+| \`Velora.Script.Syntax\` | Lossless lexer and recoverable syntax tree |
+| \`Velora.Script.Semantics\` | Symbols, binding, source references, diagnostics |
+| \`Velora.Script.Compiler\` | VelScript → immutable executable IR |
+| \`Velora.Runtime\` + \`Velora.Runtime.Contracts\` | Dialogue, choices, conditions, state, events, deterministic execution |
+| \`Velora.Cli\` | Validate and simulate scripts and projects headlessly |
+| \`Velora.ProjectModel\` + \`Velora.Assets\` | Project manifests, asset resolution, path containment |
+| \`Velora.Persistence\` | Compatible v1/v2 reads and v2 save writes |
+| \`Velora.Localization\` | Localized story text and catalog selection |
+| \`Velora.Audio\` + \`Velora.Audio.Miniaudio\` | Audio requests, isolated native audio adapter |
+| \`Velora.Rendering.Abstractions\` + \`Velora.Rendering.Sdl\` | Rendering state and emerging SDL backend |
+| \`Velora.Text\`, \`Velora.UI\`, \`Velora.Platform.*\` | Typewriter, UI contracts, host/platform services |
 
-## Features
+**C# works today for narrative runtime integration**, e.g. Godot .NET,
+but the host must supply UI, input, graphics, and its own audio presentation.
 
-- dialogue, choices, text input, variables, conditions, labels, and jumps
-- backgrounds, layered sprites, transitions, tweens, particles, and post effects
-- music, sound effects, and voice channels
-- save slots, quick save and load, persistent settings, and dialogue history
-- windowed, borderless, and fullscreen modes
-- UTF-8 scripts and external locale files
-- native CMake builds for Windows, Linux, and macOS
+## Get started (C# preview)
 
-## Build
+Requirements: **.NET SDK 10.0.403**, pinned in \`global.json\`.
 
-You need CMake 3.25 or newer, Git, and a C++20 compiler. The first configure
-downloads dependencies at revisions pinned in `CMakeLists.txt`.
+\`\`\`sh
+git clone https://github.com/imaginatorone/velora.git
+cd velora
+dotnet restore Velora.sln --locked-mode
+dotnet build Velora.sln -c Debug --no-restore
+dotnet test --solution Velora.sln -c Debug --no-build --no-restore
+\`\`\`
 
-```sh
-cmake --preset release
-cmake --build --preset release --parallel
-ctest --preset release -C Release
-```
+Validate and run the sample without a graphical application:
 
-The executable is written below `out/build/release/bin`. On macOS it is an app
-bundle. On Windows and Linux, keep the copied `assets` directory beside the
-executable.
+\`\`\`sh
+dotnet run --project src/Velora.Cli -- validate samples/KitchenSink/game.velproj
+dotnet run --project src/Velora.Cli -- simulate samples/KitchenSink/game.velproj --input Reader
+\`\`\`
 
-Platform prerequisites, install layouts, and universal macOS builds are
-documented in [BUILDING.md](BUILDING.md).
+Embed the compiler/runtime through C# project references to
+\`Velora.Script.Syntax\`, \`Velora.Script.Semantics\`,
+\`Velora.Script.Compiler\`, \`Velora.Runtime\`, and their referenced
+projects. The host uses \`SyntaxTree.ParseText\` →
+\`SemanticModel.Create\` → \`VeloraCompiler.Compile\` →
+\`StoryRuntime.Start/Advance/SelectChoice\`, then renders its events/state.
 
-## Start a story
+See [Godot integration](docs/INTEGRATIONS_GODOT.md) for an actual host
+integration pattern, and [C# testing](docs/TESTING_CSHARP.md) for detailed
+build/test instructions.
 
-Velora opens [assets/scripts/example.vel](assets/scripts/example.vel) by
-default. Pass another entry file with:
+## VelScript example
 
-```sh
-VeloraEngine --script path/to/story.vel
-```
-
-VelScript files use the `.vel` extension:
-
-```text
+\`\`\`text
 character guide = "Guide" color: #8FB3A2
 
 label start:
-    guide "Welcome to Velora."
-
+    guide "You're not alone here."
     menu:
-        "Continue":
-            jump next_scene
+        "Stay":
+            guide "Then let us begin."
         "Leave":
-            jump finish
+            guide "Until next time."
     end
+\`\`\`
 
-label next_scene:
-    guide "The story continues."
-    jump finish
+Velora supports choices, conditions, character speech, variables,
+localization, and narrative intents. See the
+[VelScript reference](docs/velscript.md) and
+[sample project](samples/KitchenSink).
 
-label finish:
-    "End of example."
-```
+## Legacy C++ build
 
-Read the [VelScript guide](docs/velscript.md) for the language walkthrough,
-syntax reference, examples, and common mistakes.
+The existing C++20/SDL3 player is still available while compatibility work
+continues. It is **not** the recommended starting point for new integrations:
 
-## Controls
+\`\`\`sh
+cmake --preset release
+cmake --build --preset release --parallel
+ctest --preset release -C Release
+\`\`\`
 
-| Key | Action |
-| --- | --- |
-| Enter or Space | Advance dialogue |
-| Escape | Open or close the game menu |
-| A | Toggle auto mode |
-| Ctrl | Hold to skip |
-| Page Up | Open dialogue history |
-| F5 / F7 | Quick save / quick load |
-| Shift+R | Reload the current script |
-| F11 | Toggle fullscreen |
+Legacy platform prerequisites and packaging are in [BUILDING.md](BUILDING.md).
+Do not delete or rewrite compatibility tests just to make migration green.
 
-## Documentation
+## Migration and project status
 
-| Document | Purpose |
-| --- | --- |
-| [VelScript guide](docs/velscript.md) | Language tutorial and command reference |
-| [Build guide](BUILDING.md) | Platform setup, builds, installs, and packaging |
-| [Contributing guide](CONTRIBUTING.md) | Development workflow and pull request checks |
-| [Governance](GOVERNANCE.md) | Project roles and decision process |
-| [Security policy](SECURITY.md) | Private vulnerability reporting |
-| [Third-party notices](THIRD_PARTY_NOTICES.md) | Licenses for fetched dependencies |
+- [Current implementation status](docs/migration/STATUS.md)
+- [Architecture](docs/migration/ARCHITECTURE.md)
+- [Roadmap and gates](docs/migration/ROADMAP.md)
+- [Compatibility decisions](docs/migration/COMPATIBILITY.md)
+- [Contributing](CONTRIBUTING.md) · [Governance](GOVERNANCE.md) ·
+  [Security](SECURITY.md) · [Third-party notices](THIRD_PARTY_NOTICES.md)
 
-## Repository layout
+## Ownership and license
 
-```text
-.github/         Contribution templates and dependency updates
-assets/          Runtime icons, locale files, and example scripts
-cmake/           CMake compatibility modules
-docs/            VelScript documentation
-src/             Engine source
-tests/           Parser and save-format regression tests
-```
-
-Generated files belong under `out/` and are ignored by Git.
-
-## Contributing
-
-Contributions are welcome. Start with [CONTRIBUTING.md](CONTRIBUTING.md), and
-open an issue before making a large behavioral or language change. Before
-submitting a pull request, build the project and run the tests described there.
-
-## Project team
-
-- [@imaginatorone](https://github.com/imaginatorone) - owner and lead maintainer
-- [@Lucferdev](https://github.com/Lucferdev) - co-author and maintainer
-
-## License
-
-Velora Engine is released under the [MIT License](LICENSE). You may use,
-modify, and distribute the engine in personal or commercial projects,
-including closed-source games. Keep the copyright and license notice with
-copies or substantial portions of the engine.
-
-Your scripts, artwork, audio, and other game content remain yours and may use
-any license you choose. The MIT license applies to Velora itself, not to work
-created with it. Dependency licenses are listed in
-[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
+Velora is owned and currently maintained by **imaginatorone**.
+Historical contributors and copyright notices remain traceable through Git
+history and the existing [MIT license](LICENSE); current maintenance roles
+are independent of prior contributions.

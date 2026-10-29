@@ -1,0 +1,162 @@
+-- Velora compatibility and end-to-end integration fixture.
+-- Keep the default first-choice route finite and deterministic.
+
+config ui_accent_color = "#8FB3A2"
+config text_speed = 48
+config game_locale = "en"
+config sample.variant = "kitchen-sink-v1"
+
+meta set_title "Velora Kitchen Sink"
+
+character guide = "Guide" color: #8FB3A2
+character operator = "Operator" color: #D4B483
+
+set player.name = ""
+set difficulty = ""
+set visits = 0
+set ready = false
+set nested_after_dialogue = false
+set nested_after_wait = false
+set choice_after_dialogue = false
+set missing_value = ""
+
+screen status_panel:
+    panel at 0.08,0.08 size(0.84,0.20) alpha(0.92):
+        text "Kitchen Sink" at 0.12,0.12 color: #EDF4E9
+        text "All systems are source-mapped." at 0.12,0.19 color: #D4B483 action jump visual_showcase
+        imagebutton "ui/continue.svg" action jump visual_showcase
+    end
+end
+
+label start:
+    scene "backgrounds/grid.svg" with dissolve(0.20)
+    particle dust intensity(0.16) wind(0.03)
+    play bgm "audio/optional-theme.ogg" fadein(0.20) volume(0.70)
+
+    -- Builtins are expressions; interpolation resolves stored variables only.
+    set host_locale = os_locale
+    set host_time = os_time
+    guide "{bold}Velora Kitchen Sink{/bold} checks [host_locale] at [host_time]."
+    "Inline commands: {speed:80}fast{wait:0.02} normal {shake_screen:0.05}{play_sfx:audio/optional-click.wav}."
+
+    input "Your name" -> player.name
+    if player.name == "":
+        set player.name = "Reader"
+    end
+
+    input "Difficulty" -> difficulty
+        "Story"
+        "Normal"
+        "Hard"
+    end
+
+    set visits = visits + 1
+    set score = (visits * 2) - 1
+    set ready = score >= 1 and not false
+
+    guide "Welcome, {color:#D4B483}[player.name]{/color}."
+    menu:
+        "Run the complete showcase":
+            guide "The selected choice pauses before its remaining body."
+            set choice_after_dialogue = true
+            set route = "showcase"
+            jump visual_showcase
+        "Inspect the alternate branch":
+            set route = "alternate"
+            jump alternate
+        "Finish immediately":
+            jump finish
+    end
+
+label visual_showcase:
+    show guide "sprites/guide.svg" at left with dissolve(0.20) zoom(1.05) zorder(2) rotate(-2)
+    show operator "sprites/operator.svg" at 0.72,0.56 medium zorder(1) flipped
+    show guide happy smile at center closeup
+
+    if ready and visits >= 1:
+        guide "A nested dialogue now owns an explicit continuation."
+        set nested_after_dialogue = true
+    elif difficulty == "Hard":
+        operator "The hard route remains available."
+    else:
+        "The fallback branch remains source-mapped."
+    end
+
+    if ready:
+        wait 0.05
+        set nested_after_wait = true
+    end
+
+    emotion guide happy
+    emotion guide surprised
+    emotion operator sad
+    emotion operator angry
+    emotion operator nervous
+
+    tween guide x 0.42 duration(0.10) ease_out
+    tween guide y 0.58 duration(0.10) ease_in
+    tween guide alpha 0.90 duration(0.10) linear
+    tween guide zoom 1.10 duration(0.10) ease_in_out
+    tween guide rotate 3 duration(0.10) bounce
+
+    particle rain intensity(0.30) wind(0.10)
+    particle snow intensity(0.20)
+    particle fire at(0.50,0.82) radius(0.12)
+    particle sparkle intensity(0.25)
+    particle petals wind(0.05)
+    particle custom "custom_layer" intensity(0.10) at(0.50,0.50) radius(0.20)
+
+    show_screen status_panel
+    hide_screen status_panel
+
+    meta lock_save
+    meta hide_quickbar
+    meta show_quickbar
+    meta glitch_text 0.05
+    meta glitch_ui 0.05
+    meta shake_window 0.05
+    meta effect vignette 0.35 0.10
+    meta effect crt 0.20 0.10
+    meta effect glitch 0.20 0.10
+    meta effect blur 0.15 0.10
+    meta effect fade 0.20 0.10 0.0 0.0 0.0
+    meta effect color_grade 0.20 0.10 0.2 0.3 0.4
+    meta effect clear
+    meta unlock_save
+
+    play sfx "audio/optional-click.wav" volume(0.80)
+    play voice "audio/optional-line.ogg" fadein(0.05) volume(1.0)
+    play bgm "audio/optional-second-theme.ogg" volume(0.60) crossfade(0.20)
+    stop voice fadeout(0.05)
+    stop sfx
+
+    particle stop rain
+    particle stop all
+    hide operator with dissolve(0.10)
+    hide all
+    jump finish
+
+label alternate:
+    operator "The alternate route exercises comparisons and coercion."
+    set arithmetic = "2.5" + true
+    set comparison = arithmetic >= 3.5 or missing_value != ""
+    set safe_division = 7 / 0
+    jump finish
+
+-- Host-changing commands are compiled and source-mapped but intentionally not
+-- reachable from the default automated route.
+label host_actions:
+    meta file_write "kitchen-state.txt" "visited"
+    meta file_delete "kitchen-state.txt"
+    meta fullscreen
+    meta windowed
+    meta delete_save 20
+    jump finish
+
+label quit_action:
+    meta quit
+
+label finish:
+    stop bgm fadeout(0.10)
+    guide "Kitchen Sink complete: choice=[choice_after_dialogue], dialogue=[nested_after_dialogue], wait=[nested_after_wait]."
+    meta main_menu

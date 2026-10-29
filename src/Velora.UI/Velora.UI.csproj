@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <AssemblyName>Velora.UI</AssemblyName>
+    <RootNamespace>Velora.UI</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="../Velora.Rendering.Abstractions/Velora.Rendering.Abstractions.csproj" />
+  </ItemGroup>
+</Project>

@@ -23,8 +23,9 @@ count.
 lead maintainer. The owner sets the long-term direction and has the final
 decision when maintainer consensus is not possible.
 
-[`@Lucferdev`](https://github.com/Lucferdev) is a project co-author and
-maintainer, contributing to design, implementation, and project maintenance.
+The active project owner and maintainer is **@imaginatorone**. Previous
+contributors remain attributed through the historical Git record and existing
+copyright notices, but those records do not grant present maintainer status.
 
 ## Decisions
 
